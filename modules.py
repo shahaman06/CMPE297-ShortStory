@@ -5,7 +5,6 @@ import os
 # GLOBAL VARS:
 CHANNELS = 3
 FEATURES = 16
-IMG_SHAPE = 208
 RANDOM_VEC_SIZE = 256
 
 class Discriminator(nn.Module):
