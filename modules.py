@@ -1,17 +1,12 @@
 import torch.nn as nn
-import numpy as np
 import torch
 import os
-import cv2
-from torch.utils.data import Dataset
-from glob import glob
 
 # GLOBAL VARS:
 CHANNELS = 3
 FEATURES = 16
 IMG_SHAPE = 208
 RANDOM_VEC_SIZE = 256
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 class Discriminator(nn.Module):
     def __init__(self, channels = CHANNELS, features = FEATURES):
@@ -87,19 +82,3 @@ class Generator(nn.Module):
         x = torch.relu(self.bn4(self.conv4(x)))
         x = torch.tanh(self.conv5(x))
         return x
-
-class PaintingDataset(Dataset):
-    def __init__(self, loc = os.path.join('Painting', 'train_2'), img_shape = 208):
-        self.paintings = glob(os.path.join(loc, '')+'*.jpg')
-        self.img_shape = img_shape
-        
-    def __len__(self):
-        return len(self.paintings)
-    
-    def __getitem__(self, idx):
-        img = self.paintings[idx]
-        img = cv2.imread(img)
-        img = cv2.resize(img, (self.img_shape, self.img_shape))
-        img = np.moveaxis(img, -1, 0) # pytorch takes channel first images
-        img = torch.tensor(img).float()
-        return img.to(device)
